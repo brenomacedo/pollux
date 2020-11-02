@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model chatMessages {
+  id                                    Int    @id @default(autoincrement())
+  content                               String
+  userId                                Int
+  destinataryId                         Int
+  user_chatMessages_destinataryIdTouser user   @relation("chatMessages_destinataryIdTouser", fields: [destinataryId], references: [id])
+  user_chatMessages_userIdTouser        user   @relation("chatMessages_userIdTouser", fields: [userId], references: [id])
+}
+
+model group {
+  id            Int             @id @default(autoincrement())
+  name          String
+  description   String?
+  groupMessages groupMessages[]
+  userToGroup   userToGroup[]
+}
+
+model groupMessages {
+  id      Int    @id @default(autoincrement())
+  content String
+  userId  Int
+  groupId Int
+  group   group  @relation(fields: [groupId], references: [id])
+  user    user   @relation(fields: [userId], references: [id])
+}
+
+model user {
+  id                                            Int             @id @default(autoincrement())
+  name                                          String
+  description                                   String?
+  email                                         String          @unique
+  password                                      String?
+  avatar                                        String          @default("default-avatar.png")
+  resetToken                                    String?
+  expiresIn                                     Int?
+  chatMessages_chatMessages_destinataryIdTouser chatMessages[]  @relation("chatMessages_destinataryIdTouser")
+  chatMessages_chatMessages_userIdTouser        chatMessages[]  @relation("chatMessages_userIdTouser")
+  groupMessages                                 groupMessages[]
+  userToGroup                                   userToGroup[]
+}
+
+model userToGroup {
+  userId  Int
+  groupId Int
+  group   group @relation(fields: [groupId], references: [id])
+  user    user  @relation(fields: [userId], references: [id])
+
+  @@unique([userId, groupId], name: "userToGroupIndex")
+}
