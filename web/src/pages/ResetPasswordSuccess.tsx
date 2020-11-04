@@ -45,7 +45,7 @@ const Container = styled.div`
     }
 `
 
-const Success = () => {
+const ResetPasswordSuccess = () => {
     
 
     return (
@@ -58,11 +58,11 @@ const Success = () => {
 
             <h2>Success!</h2>
 
-            <p>You account was created!</p>
+            <p>You password was updated!</p>
 
             <button>Back to login</button>
         </Container>
     )
 }
 
-export default Success
+export default ResetPasswordSuccess
