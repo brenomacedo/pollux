@@ -142,6 +142,9 @@ const Icon = styled.div`
 
 const ResetPassword = () => {
 
+    
+    const [passwordVisible, setPasswordVisible] = useState(false)
+
     return (
         <Container>
             <LeftSide>
@@ -150,11 +153,19 @@ const ResetPassword = () => {
             </LeftSide>
             <RightSide>
                 <form onSubmit={() => {}}>
-                    <h1>Register</h1>
-                    <input placeholder="Your name" type="text"/>
-                    <input placeholder="Your email" type="email"/>
-                    <input placeholder="Confirm your password" type="password"/>
-                    <button type="submit">Register</button>
+                    <h1>Reset Password</h1>
+                    <input placeholder="Your token" type="text"/>
+                    <IPassContainer>
+                        <input placeholder="Your new password"
+                        type={passwordVisible ? "text" : "password"}/>
+                        {passwordVisible ? (<Icon onClick={() => setPasswordVisible(false)}>
+                            <FiEye size={20} color='black' />
+                        </Icon>) : (<Icon onClick={() => setPasswordVisible(true)}>
+                            <FiEyeOff size={20} color='black' />
+                        </Icon>)}
+                    </IPassContainer>
+                    <input placeholder="Confirm your new password" type="password"/>
+                    <button type="submit">Change password</button>
                 </form>
             </RightSide>
         </Container>
