@@ -1,6 +1,7 @@
 import React from 'react'
 import { createGlobalStyle } from 'styled-components'
 import Login from './pages/Login'
+import Register from './pages/Register'
 
 const GlobalStyle = createGlobalStyle`
     :root {
@@ -18,7 +19,7 @@ function App() {
     return (
         <>
             <GlobalStyle />
-            <Login />
+            <Register />
         </>
     )
 }

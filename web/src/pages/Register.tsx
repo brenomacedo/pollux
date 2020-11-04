@@ -140,7 +140,7 @@ const Icon = styled.div`
     cursor: pointer;
 `
 
-const Login = () => {
+const Register = () => {
 
     const [remember, setRemember] = useState(false)
     const [passwordVisible, setPasswordVisible] = useState(false)
@@ -153,7 +153,8 @@ const Login = () => {
             </LeftSide>
             <RightSide>
                 <form onSubmit={() => {}}>
-                    <h1>Login</h1>
+                    <h1>Register</h1>
+                    <input placeholder="Your name" type="text"/>
                     <input placeholder="Your email" type="email"/>
                     <IPassContainer>
                         <input placeholder="Your password"
@@ -164,18 +165,13 @@ const Login = () => {
                             <FiEyeOff size={20} color='black' />
                         </Icon>)}
                     </IPassContainer>
-                    <LoginOptions>
-                        <Marker active={remember} onClick={() => setRemember(!remember)}
-                        ><FiCheck size={15} color='white' /></Marker>
-                        <p>Remember-me</p>
-                    </LoginOptions>
-                    <button type="submit">Login</button>
-                    <p>I forgot my password</p>
-                    <p>I don't have an account</p>
+                    <input placeholder="Confirm your password" type="password"/>
+                    <button type="submit">Register</button>
+                    <p>I already have an account</p>
                 </form>
             </RightSide>
         </Container>
     )    
 }
 
-export default Login
+export default Register
