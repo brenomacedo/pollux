@@ -45,7 +45,7 @@ const Container = styled.div`
     }
 `
 
-const ResetPasswordSuccess = () => {
+const RegisterSuccess = () => {
     
 
     return (
@@ -65,4 +65,4 @@ const ResetPasswordSuccess = () => {
     )
 }
 
-export default ResetPasswordSuccess
+export default RegisterSuccess
