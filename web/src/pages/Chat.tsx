@@ -4,6 +4,7 @@ import { FaUserFriends, FaDoorOpen } from 'react-icons/fa'
 import SearchFriends from '../components/SearchFriends'
 import Chats from '../components/Chats'
 import Notifications from '../components/Notifications'
+import ChatBoxComponent from '../components/ChatBoxComponent'
 
 const Container = styled.div`
     min-height: 480px;
@@ -78,7 +79,7 @@ const Chat = () => {
                 <Notifications />
             </Friends>
             <ChatBox>
-
+                <ChatBoxComponent />
             </ChatBox>
         </Container>
     )
