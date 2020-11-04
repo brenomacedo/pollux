@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { FiEye, FiEyeOff, FiCheck } from 'react-icons/fi'
+import Star from '../images/star.svg'
 
 interface MarkerProps {
     active: boolean
@@ -146,7 +147,7 @@ const ForgotPassword = () => {
     return (
         <Container>
             <LeftSide>
-                <img src="/star.svg" alt="logo"/>
+                <img src={Star} alt="logo"/>
                 <p>Pollux</p>
             </LeftSide>
             <RightSide>
