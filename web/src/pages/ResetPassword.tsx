@@ -140,9 +140,7 @@ const Icon = styled.div`
     cursor: pointer;
 `
 
-const Register = () => {
-
-    const [passwordVisible, setPasswordVisible] = useState(false)
+const ResetPassword = () => {
 
     return (
         <Container>
@@ -155,22 +153,12 @@ const Register = () => {
                     <h1>Register</h1>
                     <input placeholder="Your name" type="text"/>
                     <input placeholder="Your email" type="email"/>
-                    <IPassContainer>
-                        <input placeholder="Your password"
-                        type={passwordVisible ? "text" : "password"}/>
-                        {passwordVisible ? (<Icon onClick={() => setPasswordVisible(false)}>
-                            <FiEye size={20} color='black' />
-                        </Icon>) : (<Icon onClick={() => setPasswordVisible(true)}>
-                            <FiEyeOff size={20} color='black' />
-                        </Icon>)}
-                    </IPassContainer>
                     <input placeholder="Confirm your password" type="password"/>
                     <button type="submit">Register</button>
-                    <p>I already have an account</p>
                 </form>
             </RightSide>
         </Container>
     )    
 }
 
-export default Register
+export default ResetPassword

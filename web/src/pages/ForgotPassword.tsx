@@ -60,6 +60,7 @@ const RightSide = styled.div`
         margin-top: 10px;
         user-select: none;
         cursor: pointer;
+        text-align: center;
     }
 
     h1 {
@@ -140,9 +141,7 @@ const Icon = styled.div`
     cursor: pointer;
 `
 
-const Register = () => {
-
-    const [passwordVisible, setPasswordVisible] = useState(false)
+const ForgotPassword = () => {
 
     return (
         <Container>
@@ -152,25 +151,14 @@ const Register = () => {
             </LeftSide>
             <RightSide>
                 <form onSubmit={() => {}}>
-                    <h1>Register</h1>
-                    <input placeholder="Your name" type="text"/>
+                    <h1>Recover password</h1>
+                    <p>Put your email to we send an recover token</p>
                     <input placeholder="Your email" type="email"/>
-                    <IPassContainer>
-                        <input placeholder="Your password"
-                        type={passwordVisible ? "text" : "password"}/>
-                        {passwordVisible ? (<Icon onClick={() => setPasswordVisible(false)}>
-                            <FiEye size={20} color='black' />
-                        </Icon>) : (<Icon onClick={() => setPasswordVisible(true)}>
-                            <FiEyeOff size={20} color='black' />
-                        </Icon>)}
-                    </IPassContainer>
-                    <input placeholder="Confirm your password" type="password"/>
-                    <button type="submit">Register</button>
-                    <p>I already have an account</p>
+                    <button type="submit">Enviar Email</button>
                 </form>
             </RightSide>
         </Container>
     )    
 }
 
-export default Register
+export default ForgotPassword

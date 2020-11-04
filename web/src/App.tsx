@@ -1,7 +1,9 @@
 import React from 'react'
 import { createGlobalStyle } from 'styled-components'
+import ForgotPassword from './pages/ForgotPassword'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import ResetPassword from './pages/ResetPassword'
 
 const GlobalStyle = createGlobalStyle`
     :root {
@@ -19,7 +21,7 @@ function App() {
     return (
         <>
             <GlobalStyle />
-            <Register />
+            <ForgotPassword />
         </>
     )
 }
