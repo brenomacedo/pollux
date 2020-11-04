@@ -2,6 +2,10 @@ import React from 'react'
 import styled from 'styled-components'
 import { FiArrowRight } from 'react-icons/fi'
 
+interface MessageProps {
+    sent?: boolean
+}
+
 const Container = styled.div`
     min-height: 480px;
     height: 100vh;
@@ -33,6 +37,7 @@ const ChatMessage = styled.div`
     padding: 10px;
     display: flex;
     justify-content: space-between;
+    border-top: 1px solid #ccc;
 
     input {
         height: 30px;
@@ -58,7 +63,18 @@ const ChatMessage = styled.div`
 
 const ChatBox = styled.div`
     height: calc(100vh - 110px);
-    background-color: red;
+    padding: 20px;
+`
+
+const Message = styled.div<MessageProps>`
+    background-color: ${props => props.sent ? '#00b7ff' : '#42caff'};
+    position: relative;
+    left: ${props => props.sent ? '30px' : '0'};
+    width: calc(100% - 30px);
+    padding: 10px;
+    border-radius: 5px;
+    font-family: var(--RW);
+    margin-bottom: 10px;
 `
 
 const ChatBoxComponent = () => {
@@ -69,7 +85,15 @@ const ChatBoxComponent = () => {
                 <h3>Breno Macêdo</h3>
             </ChatBar>
             <ChatBox>
-
+                <Message >
+                    asdasd
+                </Message>
+                <Message sent >
+                    asdasd
+                </Message>
+                <Message >
+                    asdasd
+                </Message>
             </ChatBox>
             <ChatMessage>
                 <input type="text" placeholder="Write an message"/>

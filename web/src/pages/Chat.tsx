@@ -24,9 +24,9 @@ const Friends = styled.div`
 
 const ChatBox = styled.div`
     flex: 1;
-    background-color: blue;
     min-height: 480px;
     height: 100vh;
+    border-left: 1px solid #ccc;
 `
 
 const UserBar = styled.div`
