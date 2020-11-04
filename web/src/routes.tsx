@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import Chat from './pages/Chat'
 import ForgotPassword from './pages/ForgotPassword'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -17,6 +18,7 @@ const Routes = () => {
                 <Route component={ResetPassword} path='/reset-password' exact />
                 <Route component={ResetPasswordSuccess} path='/reset-password/success' exact />
                 <Route component={RegisterSuccess} path='/register/success' exact />
+                <Route component={Chat} path='/chat' exact />
             </Switch>
         </BrowserRouter>
     )
