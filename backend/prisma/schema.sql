@@ -40,4 +40,10 @@ CREATE TABLE "public"."userToGroup" (
     FOREIGN KEY ("groupId") REFERENCES "public"."group"(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE UNIQUE INDEX "userToGroupIndex" ON "public"."userToGroup"("userId" int4_ops, "groupId" int4_ops)
+CREATE TABLE "public"."userToUser" (
+    "userId" INTEGER NOT NULL REFERENCES "public"."user"(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    "userId2" INTEGER NOT NULL REFERENCES "public"."user"(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE UNIQUE INDEX "userToGroupIndex" ON "public"."userToGroup"("userId" int4_ops, "groupId" int4_ops);
+CREATE UNIQUE INDEX "userToUserIndex" ON "public"."userToUser"("userId" int4_ops, "userId2" int4_ops);
