@@ -1,6 +1,8 @@
 import { Request, Response } from 'express'
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import { key } from '../auth.json'
 import * as Yup from 'yup'
 
 const prisma = new PrismaClient()
@@ -24,7 +26,7 @@ export default {
                 abortEarly: false
             })
         } catch (e) {
-            return res.status(500).json({ errors: ['erro'] })
+            return res.status(500).json(e.errors)
         }
 
         const password = await bcrypt.hash(rawPassword, 10)
@@ -37,14 +39,40 @@ export default {
             })
 
             return res.status(201).json(user)
-            
+
         } catch (e) {
             return res.status(500).json({ errors: ['Email já cadastrado!'] })
         }
 
     },
 
-    authUser(req: Request, res: Response) {
+    async authUser(req: Request, res: Response) {
+
+        const { email, password } = req.body
+
+        const user = await prisma.user.findOne({
+            where: {
+                email
+            }
+        })
+
+        if(!user || !user.password) {
+            return res.status(500).json({ errors: ['Usuário ou senha incorretos!'] })
+        }
+
+        if(!await bcrypt.compare(password, user.password)) {
+            return res.status(500).json({ errors: ['Usuário ou senha incorretos!'] })
+        }
+
+        const token = jwt.sign({ id: user.id }, key, { expiresIn: 86400 })
+
+        return res.status(201).json({ user, token })
+
+    },
+
+    verifyToken(req: Request, res: Response) {
+        
+
 
     }
 }
