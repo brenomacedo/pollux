@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { key } from '../auth.json'
 import * as Yup from 'yup'
+import UserView from '../views/UserView'
 
 const prisma = new PrismaClient()
 
@@ -38,7 +39,7 @@ export default {
                 }
             })
 
-            return res.status(201).json(user)
+            return res.status(201).json(UserView(user))
 
         } catch (e) {
             return res.status(500).json({ errors: ['Email já cadastrado!'] })
@@ -66,7 +67,7 @@ export default {
 
         const token = jwt.sign({ id: user.id }, key, { expiresIn: 86400 })
 
-        return res.status(201).json({ user, token })
+        return res.status(201).json({ user: UserView(user), token })
 
     },
 
@@ -82,7 +83,7 @@ export default {
             return res.status(500).json({ errors: ['Usuário desconhecido!'] })
         }
 
-        return res.status(200).json(user)
+        return res.status(200).json(UserView(user))
 
     }
 }
