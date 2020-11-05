@@ -70,9 +70,19 @@ export default {
 
     },
 
-    verifyToken(req: Request, res: Response) {
+    async verifyToken(req: Request, res: Response) {
         
+        const user = await prisma.user.findOne({
+            where: {
+                id: req.body.userId
+            }
+        })
 
+        if(!user) {
+            return res.status(500).json({ errors: ['Usuário desconhecido!'] })
+        }
+
+        return res.status(200).json(user)
 
     }
 }
