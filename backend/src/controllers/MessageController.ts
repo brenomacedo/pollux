@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { Request, Response } from 'express'
+import { MessageView } from '../views/MessageView'
 import * as Yup from 'yup'
 
 const prisma = new PrismaClient()
@@ -41,7 +42,7 @@ export default {
                 }
             })
 
-            return res.status(201).json(message)
+            return res.status(201).json(MessageView(message))
         } catch (e) {
             return res.status(500).json({ errors: ['Não foi possível enviar sua mensagem'] })
         }
