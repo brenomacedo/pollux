@@ -11,5 +11,6 @@ routes.post('/user/auth', UserController.authUser)
 routes.get('/user/verify', authMiddleware, UserController.verifyToken)
 routes.post('/message', MessageController.createMessage)
 routes.post('/request', FriendRequestController.createRequest)
+routes.post('/friend', FriendRequestController.answerRequest)
 
 export default routes
