@@ -94,6 +94,20 @@ export default {
             return res.status(500).json({ errors: ['Essa solicitação não existe'] })
         }
 
+        request.forEach(async req => {
+            await prisma.userToUser.update({
+                where: {
+                    userToUserIndex: {
+                        userId: req.userId,
+                        userId2: req.userId2
+                    }
+                },
+                data: {
+                    status: "ACCEPTED"
+                }
+            })
+        })
+
         try {
             const userFriend = await prisma.userFriends.create({
                 data: {

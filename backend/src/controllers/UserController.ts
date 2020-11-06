@@ -58,7 +58,19 @@ export default {
             include: {
                 chatMessages_chatMessages_destinataryIdTouser: true,
                 chatMessages_chatMessages_userIdTouser: true,
-                userToUser_userTouserToUser_userId2: true
+                userToUser_userTouserToUser_userId2: true,
+                userFriends_userTouserFriends_userId2: {
+                    include: {
+                        user_userTouserFriends_userId2: true,
+                        user_userTouserFriends_userId: true
+                    }
+                },
+                userFriends_userTouserFriends_userId: {
+                    include: {
+                        user_userTouserFriends_userId2: true,
+                        user_userTouserFriends_userId: true
+                    }
+                }
             }
         })
 
@@ -72,7 +84,7 @@ export default {
 
         const token = jwt.sign({ id: user.id }, key, { expiresIn: 86400 })
 
-        return res.status(201).json({ user, token })
+        return res.status(201).json({ user: UserViewWM(user), token })
 
     },
 
