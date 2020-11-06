@@ -18,6 +18,8 @@ CREATE TABLE "public"."group" (
 CREATE TABLE "public"."chatMessages" (
     id SERIAL PRIMARY KEY NOT NULL,
     content TEXT NOT NULL,
+    type VARCHAR(255) NOT NULL,
+    "createdAt" BIGINT NOT NULL,
     "userId" INTEGER NOT NULL,
     "destinataryId" INTEGER NOT NULL,
     FOREIGN KEY ("userId") REFERENCES "public"."user"(id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -41,6 +43,7 @@ CREATE TABLE "public"."userToGroup" (
 );
 
 CREATE TABLE "public"."userToUser" (
+    "status" VARCHAR(255),
     "userId" INTEGER NOT NULL REFERENCES "public"."user"(id) ON DELETE CASCADE ON UPDATE CASCADE,
     "userId2" INTEGER NOT NULL REFERENCES "public"."user"(id) ON DELETE CASCADE ON UPDATE CASCADE
 );

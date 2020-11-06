@@ -27,7 +27,7 @@ export default {
                 abortEarly: false
             })
         } catch (e) {
-            return res.status(500).json(e.errors)
+            return res.status(500).json({ errors: e.errors })
         }
 
         const password = await bcrypt.hash(rawPassword, 10)

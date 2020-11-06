@@ -10,6 +10,8 @@ datasource db {
 model chatMessages {
   id                                    Int    @id @default(autoincrement())
   content                               String
+  type                                  String
+  createdAt                             Int
   userId                                Int
   destinataryId                         Int
   user_chatMessages_destinataryIdTouser user   @relation("chatMessages_destinataryIdTouser", fields: [destinataryId], references: [id])
@@ -60,10 +62,11 @@ model userToGroup {
 }
 
 model userToUser {
+  status                        String?
   userId                        Int
   userId2                       Int
-  user_userTouserToUser_userId  user @relation("userTouserToUser_userId", fields: [userId], references: [id])
-  user_userTouserToUser_userId2 user @relation("userTouserToUser_userId2", fields: [userId2], references: [id])
+  user_userTouserToUser_userId  user    @relation("userTouserToUser_userId", fields: [userId], references: [id])
+  user_userTouserToUser_userId2 user    @relation("userTouserToUser_userId2", fields: [userId2], references: [id])
 
   @@unique([userId, userId2], name: "userToUserIndex")
 }
