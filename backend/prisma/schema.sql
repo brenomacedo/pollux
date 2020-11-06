@@ -48,5 +48,11 @@ CREATE TABLE "public"."userToUser" (
     "userId2" INTEGER NOT NULL REFERENCES "public"."user"(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE TABLE "public"."userFriends" (
+    "userId" INTEGER NOT NULL REFERENCES "public"."user"(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    "userId2" INTEGER NOT NULL REFERENCES "public"."user"(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 CREATE UNIQUE INDEX "userToGroupIndex" ON "public"."userToGroup"("userId" int4_ops, "groupId" int4_ops);
 CREATE UNIQUE INDEX "userToUserIndex" ON "public"."userToUser"("userId" int4_ops, "userId2" int4_ops);
+CREATE UNIQUE INDEX "userFriendsIndex" ON "public"."userFriends"("userId" int4_ops, "userId2" int4_ops);

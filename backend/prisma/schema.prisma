@@ -47,6 +47,8 @@ model user {
   chatMessages_chatMessages_destinataryIdTouser chatMessages[]  @relation("chatMessages_destinataryIdTouser")
   chatMessages_chatMessages_userIdTouser        chatMessages[]  @relation("chatMessages_userIdTouser")
   groupMessages                                 groupMessages[]
+  userFriends_userTouserFriends_userId          userFriends[]   @relation("userTouserFriends_userId")
+  userFriends_userTouserFriends_userId2         userFriends[]   @relation("userTouserFriends_userId2")
   userToGroup                                   userToGroup[]
   userToUser_userTouserToUser_userId            userToUser[]    @relation("userTouserToUser_userId")
   userToUser_userTouserToUser_userId2           userToUser[]    @relation("userTouserToUser_userId2")
@@ -69,4 +71,13 @@ model userToUser {
   user_userTouserToUser_userId2 user    @relation("userTouserToUser_userId2", fields: [userId2], references: [id])
 
   @@unique([userId, userId2], name: "userToUserIndex")
+}
+
+model userFriends {
+  userId                         Int
+  userId2                        Int
+  user_userTouserFriends_userId  user @relation("userTouserFriends_userId", fields: [userId], references: [id])
+  user_userTouserFriends_userId2 user @relation("userTouserFriends_userId2", fields: [userId2], references: [id])
+
+  @@unique([userId, userId2], name: "userFriendsIndex")
 }

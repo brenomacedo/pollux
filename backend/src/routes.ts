@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import FriendRequestController from './controllers/FriendRequestController'
 import MessageController from './controllers/MessageController'
 import UserController from './controllers/UserController'
 import authMiddleware from './middlewares/auth'
@@ -9,5 +10,6 @@ routes.post('/user', UserController.createUser)
 routes.post('/user/auth', UserController.authUser)
 routes.get('/user/verify', authMiddleware, UserController.verifyToken)
 routes.post('/message', MessageController.createMessage)
+routes.post('/request', FriendRequestController.createRequest)
 
 export default routes
