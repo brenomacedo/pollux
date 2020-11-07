@@ -7,10 +7,14 @@ interface IFriend extends userFriends {
     user_userTouserFriends_userId2: user
 }
 
+interface request extends userToUser {
+    user_userTouserToUser_userId: user
+}
+
 interface IUserViewWM extends user{
     chatMessages_chatMessages_destinataryIdTouser: chatMessages[]
     chatMessages_chatMessages_userIdTouser: chatMessages[]
-    userToUser_userTouserToUser_userId2: userToUser[]
+    userToUser_userTouserToUser_userId2: request[]
     userFriends_userTouserFriends_userId2: IFriend[]
     userFriends_userTouserFriends_userId: IFriend[]
 }

@@ -1,9 +1,17 @@
-import { userToUser } from '@prisma/client'
+import { userToUser, user } from '@prisma/client'
 
-export const RequestView = (request: userToUser) => {
+interface request extends userToUser {
+    user_userTouserToUser_userId: user
+}
+
+export const RequestView = (request: request) => {
     return {
         status: request.status,
-        from: request.userId,
-        to: request.userId2
+        from: {
+            id: request.user_userTouserToUser_userId.id,
+            name: request.user_userTouserToUser_userId.name,
+            avatar: request.user_userTouserToUser_userId.avatar,
+            description: request.user_userTouserToUser_userId.description
+        }
     }
 }
