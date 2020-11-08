@@ -1,6 +1,10 @@
-import React from 'react'
+import React, { FC } from 'react'
 import styled from 'styled-components'
 import { FiPlus } from 'react-icons/fi'
+
+interface UserProfileProps {
+    avatar: string
+}
 
 const FriendBox = styled.div`
     width: 100%;
@@ -16,12 +20,15 @@ const FriendBox = styled.div`
     }
 `
 
-const UserProfile = styled.div`
+const UserProfile = styled.div<UserProfileProps>`
     width: 40px;
     height: 40px;
     border-radius: 25px;
     background-color: white;
     border: 1px solid #ccc;
+    background-position: center;
+    background-size: contain;
+    background-image: url('http://localhost:3333/files/${props => props.avatar}');
 `
 
 const UserDescription = styled.div`
@@ -39,13 +46,21 @@ const UserDescription = styled.div`
     }
 `
 
-const Friend = () => {
+interface IUser {
+    id: number
+    name: string
+    avatar: string
+    email: string
+    description: string
+}
+
+const Friend: FC<IUser> = ({ name, avatar, description, id, email }) => {
     return (
         <FriendBox>
-            <UserProfile />
+            <UserProfile avatar={avatar} />
             <UserDescription>
-                <h3>Breno Macêdo</h3>
-                <p>Descrição do meu perfil</p>
+                <h3>{name}</h3>
+                <p>{description}</p>
             </UserDescription>
             <section>
                 <FiPlus size={25} color='black' />

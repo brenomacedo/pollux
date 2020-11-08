@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { FiSearch } from 'react-icons/fi'
 import Friend from './Friend'
+import api from '../api/api'
+import UserContext from '../contexts/UserContext'
 
 const Container = styled.div`
     min-height: 420px;
@@ -47,25 +49,40 @@ const FriendsList = styled.div`
 `
 
 const SearchFriends = () => {
+
+    interface IUser {
+        id: number
+        name: string
+        avatar: string
+        email: string
+        description: string
+    }
+
+    const [search, setSearch] = useState<IUser[]>([])
+    const searchRef = useRef<HTMLInputElement>(null)
+    const User = useContext(UserContext)
+
+    const handleSearch = async () => {
+        if(searchRef.current?.value) {
+            const users = await api.get(`/user/search?search=${searchRef.current.value}&id=${User.id}`)
+            setSearch(users.data)
+        }
+    }
+
+    const renderFriends = () => {
+        return search.map(user => {
+            return <Friend key={user.id} {...user} />
+        })
+    }
+
     return (
         <Container>
             <SearchBar>
-                <input type="text" placeholder="Search profiles here" />
-                <button><FiSearch size={12} color='white' /></button>
+                <input ref={searchRef} type="text" placeholder="Search profiles here" />
+                <button onClick={handleSearch}><FiSearch size={12} color='white' /></button>
             </SearchBar>
             <FriendsList>
-                <Friend />
-                <Friend />
-                <Friend />
-                <Friend />
-                <Friend />
-                <Friend />
-                <Friend />
-                <Friend />
-                <Friend />
-                <Friend />
-                <Friend />
-                <Friend />
+                {renderFriends()}
             </FriendsList>
         </Container>
     )
