@@ -1,7 +1,7 @@
-import e, { Request, Response } from 'express'
+import e, { request, Request, Response } from 'express'
 import { PrismaClient } from '@prisma/client'
 import * as Yup from 'yup'
-import { RequestView } from '../views/RequestView'
+import { RequestView, RequestViews } from '../views/RequestView'
 import { UserFriendView } from '../views/UserFriendView'
 
 const prisma = new PrismaClient()
@@ -39,6 +39,9 @@ export default {
                             id: userId2
                         }
                     }
+                },
+                include: {
+                    user_userTouserToUser_userId: true
                 }
             })
 
@@ -128,6 +131,23 @@ export default {
         } catch(e) {
             return res.status(500).json({ errors: ['Usuários ja são amigos!'] })
         }
+
+    },
+
+    async getRequests(req: Request, res: Response) {
+
+        const { id } = req.params
+
+        const requests = await prisma.userToUser.findMany({
+            where: {
+                userId2: Number(id)
+            },
+            include: {
+                user_userTouserToUser_userId: true
+            }
+        })
+
+        return res.status(200).json(RequestViews(requests))
 
     }
 }

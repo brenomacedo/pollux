@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { key } from '../auth.json'
 import * as Yup from 'yup'
-import { UserView, UserViewWM } from '../views/UserView'
+import { UserView } from '../views/UserView'
 
 const prisma = new PrismaClient()
 
@@ -54,27 +54,6 @@ export default {
         const user = await prisma.user.findOne({
             where: {
                 email
-            },
-            include: {
-                chatMessages_chatMessages_destinataryIdTouser: true,
-                chatMessages_chatMessages_userIdTouser: true,
-                userToUser_userTouserToUser_userId2: {
-                    include: {
-                        user_userTouserToUser_userId: true
-                    }
-                },
-                userFriends_userTouserFriends_userId2: {
-                    include: {
-                        user_userTouserFriends_userId2: true,
-                        user_userTouserFriends_userId: true
-                    }
-                },
-                userFriends_userTouserFriends_userId: {
-                    include: {
-                        user_userTouserFriends_userId2: true,
-                        user_userTouserFriends_userId: true
-                    }
-                }
             }
         })
 
@@ -88,7 +67,7 @@ export default {
 
         const token = jwt.sign({ id: user.id }, key, { expiresIn: 86400 })
 
-        return res.status(201).json({ user: UserViewWM(user), token })
+        return res.status(201).json({ user: UserView(user), token })
 
     },
 
@@ -97,27 +76,6 @@ export default {
         const user = await prisma.user.findOne({
             where: {
                 id: req.body.userId
-            },
-            include: {
-                chatMessages_chatMessages_destinataryIdTouser: true,
-                chatMessages_chatMessages_userIdTouser: true,
-                userToUser_userTouserToUser_userId2: {
-                    include: {
-                        user_userTouserToUser_userId: true
-                    }
-                },
-                userFriends_userTouserFriends_userId2: {
-                    include: {
-                        user_userTouserFriends_userId2: true,
-                        user_userTouserFriends_userId: true
-                    }
-                },
-                userFriends_userTouserFriends_userId: {
-                    include: {
-                        user_userTouserFriends_userId2: true,
-                        user_userTouserFriends_userId: true
-                    }
-                }
             }
         })
 
