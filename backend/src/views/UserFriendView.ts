@@ -18,9 +18,9 @@ export const UserFriendsView = (userF: userFirendsD[], id: number) => {
         let friend;
 
         if(f.user_userTouserFriends_userId.id !== id) {
-            friend = f.user_userTouserFriends_userId
+            friend = {...f.user_userTouserFriends_userId, password: undefined}
         } else {
-            friend = f.user_userTouserFriends_userId2
+            friend = {...f.user_userTouserFriends_userId2, password: undefined}
         }
 
         return {

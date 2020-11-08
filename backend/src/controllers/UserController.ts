@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { key } from '../auth.json'
 import * as Yup from 'yup'
-import { UserView } from '../views/UserView'
+import { UsersView, UserView } from '../views/UserView'
 
 const prisma = new PrismaClient()
 
@@ -120,7 +120,7 @@ export default {
             }
         })
 
-        return res.status(200).json(users)
+        return res.status(200).json(UsersView(users))
 
     }
 }

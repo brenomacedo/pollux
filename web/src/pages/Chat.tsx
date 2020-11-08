@@ -1,11 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { FaUserFriends, FaDoorOpen } from 'react-icons/fa'
+import { FaUserFriends, FaDoorOpen, FaSearch, FaBell } from 'react-icons/fa'
 import SearchFriends from '../components/SearchFriends'
 import Chats from '../components/Chats'
 import Notifications from '../components/Notifications'
 import ChatBoxComponent from '../components/ChatBoxComponent'
 import UserContext from '../contexts/UserContext'
+import { useHistory } from 'react-router-dom'
+import { render } from 'nprogress'
+import Axios from 'axios'
+import api from '../api/api'
 
 const Container = styled.div`
     min-height: 480px;
@@ -50,10 +54,13 @@ const UserBar = styled.div`
     aside {
         position: absolute;
         right: 20px;
-        cursor: pointer;
-        width: 50px;
+        width: 100px;
         display: flex;
         justify-content: space-between;
+    }
+
+    aside * {
+        cursor: pointer;
     }
 `
 
@@ -70,21 +77,80 @@ const UserProfile = styled.div`
 
 const Chat = () => {
 
+    interface INotification {
+        status: string
+        from: {
+            id: number
+            name: string
+            avatar: string
+            description: string | null
+        }
+    }
+    
+    interface IFriend {
+        friend: IUser
+    }
+
+    interface IUser {
+        id: number
+        name: string
+        avatar: string
+        email: string
+        description: string
+    }
+
     const User = useContext(UserContext)
 
-    const [] = useState()
+    const [bar, setBar] = useState<'notifications' | 'chats' | 'search'>('chats')
+    const [notifications, setNotifications] = useState<INotification[]>()
+    const [search, setSearch] = useState<IUser[]>([])
+    const [friends, setFriends] = useState<IFriend[]>()
 
     useEffect(() => {
+        (async () => {
+            const notifications = await api.get(`/request/${User.id}`)
+            setNotifications(notifications.data)
+        })()
+    }, [])
 
+    useEffect(() => {
+        (async () => {
+            const friends = await api.get(`/friend/${User.id}`)
+            setFriends(friends.data)
+        })()
     }, [])
 
     useEffect(() => {
 
     }, [])
 
-    useEffect(() => {
+    const { push } = useHistory()
 
-    }, [])
+    const logout = () => {
+        localStorage.clear()
+        User.setIsAuth && User.setIsAuth(false)
+        User.setAvatar && User.setAvatar(undefined)
+        User.setDescription && User.setDescription(undefined)
+        User.setEmail && User.setEmail(undefined)
+        User.setId && User.setId(undefined)
+        User.setName && User.setName(undefined)
+        push('/')
+    }
+
+    const toggleBar = (bar: 'notifications' | 'chats' | 'search') => {
+        setBar(bar)
+    }
+
+    const renderBar = () => {
+        if(bar === 'chats')
+            return <Chats />
+
+        if(bar === 'notifications')
+            return <Notifications />
+
+        if(bar === 'search')
+            return <SearchFriends />
+    }
 
     return (
         <Container>
@@ -93,11 +159,16 @@ const Chat = () => {
                     <UserProfile />
                     <p>{User.name}</p>
                     <aside>
-                        <FaUserFriends size={20} color='#01004d' />
-                        <FaDoorOpen size={20} color='#01004d' />
+                        <FaUserFriends onClick={() => toggleBar('chats')}
+                        size={20} color='#01004d' />
+                        <FaBell onClick={() => toggleBar('notifications')}
+                        size={20} color='#01004d' />
+                        <FaSearch onClick={() => toggleBar('search')}
+                        size={20} color='#01004d' />
+                        <FaDoorOpen onClick={logout} size={20} color='#01004d' />
                     </aside>
                 </UserBar>
-                <Chats />
+                {renderBar()}
             </Friends>
             <ChatBox>
                 <ChatBoxComponent />

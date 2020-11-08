@@ -11,3 +11,15 @@ export const UserView = (user: user) => {
         avatar: user.avatar
     }
 }
+
+export const UsersView = (users: user[]) => {
+    return users.map(user => {
+        return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            description: user.description,
+            avatar: user.avatar
+        }
+    })
+}

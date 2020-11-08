@@ -38,6 +38,7 @@ const Routes = () => {
             }).catch(err => {
                 alert('erro')
             })
+        } else {
         }
     }, [])
 
