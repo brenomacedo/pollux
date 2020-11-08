@@ -47,7 +47,7 @@ const Notifications: FC<NotificationsProps> = ({ notifications, setNotifications
 
     const renderNotifications = () => {
         return notifications?.map(notification => {
-            return <Notification setNotifications={setNotifications} {...notification} />
+            return <Notification notifications={notifications} setNotifications={setNotifications} {...notification} />
         })
     }
 

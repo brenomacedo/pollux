@@ -140,7 +140,10 @@ export default {
 
         const requests = await prisma.userToUser.findMany({
             where: {
-                userId2: Number(id)
+                userId2: Number(id),
+                status: {
+                    not: "ACCEPTED"
+                }
             },
             include: {
                 user_userTouserToUser_userId: true

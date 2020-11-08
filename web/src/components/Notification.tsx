@@ -1,6 +1,10 @@
-import React, { Dispatch, FC, SetStateAction } from 'react'
+import React, { Dispatch, FC, SetStateAction, useContext } from 'react'
 import styled from 'styled-components'
 import { FiCheckCircle, FiXCircle } from 'react-icons/fi'
+import { toast } from 'react-toastify'
+import api from '../api/api'
+import UserContext from '../contexts/UserContext'
+import { AxiosError } from 'axios'
 
 const FriendBox = styled.div`
     width: 100%;
@@ -65,9 +69,54 @@ interface INotification {
         description: string | null
     }
     setNotifications: Dispatch<SetStateAction<INotificationRaw[] | undefined>>
+    notifications: INotificationRaw[]
 }
 
-const Notification: FC<INotification> = ({ from, status }) => {
+const Notification: FC<INotification> = ({ from, status, setNotifications, notifications }) => {
+
+    const User = useContext(UserContext)
+
+    const acceptReq = async () => {
+        try {
+            await api.post('/friend', {
+                userId: from.id,
+                userId2: User.id
+            })
+
+            toast.success('Solicitação aceita!')
+
+            const newNotifications = notifications.filter(not => not.from !== from)
+            setNotifications(newNotifications)
+        } catch(e) {
+            const errors = e as AxiosError
+            if(!errors.response) {
+                return toast.error('Ocorreu um erro ao aceitar')
+            }
+
+            errors.response.data.errors.forEach((err: string) => {
+                toast.error(err)
+            })
+        }
+    }
+
+    const refuseReq = async () => {
+        try {
+            await api.delete(`/request/${from.id}/${User.id}`)
+            toast.success('Solicitação recusada!')
+            const newNotifications = notifications.filter(not => not.from !== from)
+            setNotifications(newNotifications)
+        } catch(e) {
+            const error = e as AxiosError
+            if(!error.response) {
+                return toast.error('Ocorreu um erro ao recusar')
+            }
+
+            error.response.data.errors.forEach((err: string) => {
+                return toast.error(err)
+            })
+        }
+    }
+
     return (
         <FriendBox>
             <UserProfile />
@@ -76,10 +125,10 @@ const Notification: FC<INotification> = ({ from, status }) => {
                 <p>{from.description}</p>
             </UserDescription>
             <section>
-                <aside>
+                <aside onClick={acceptReq} >
                     <FiCheckCircle size={25} color='green' />
                 </aside>
-                <aside>
+                <aside onClick={refuseReq}>
                     <FiXCircle size={25} color='red' />
                 </aside>
             </section>
