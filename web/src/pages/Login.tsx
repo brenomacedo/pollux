@@ -1,4 +1,4 @@
-import React, { FormEvent, useContext, useState } from 'react'
+import React, { FormEvent, useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { FiEye, FiEyeOff, FiCheck } from 'react-icons/fi'
 import Star from '../images/star.svg'
@@ -162,6 +162,14 @@ const Login = () => {
         token: string
     }
 
+    const User = useContext(UserContext)
+
+    useEffect(() => {
+        if(User.isAuth) {
+            push('/chat')
+        }
+    }, [User.isAuth])
+
     const [remember, setRemember] = useState(false)
     const [passwordVisible, setPasswordVisible] = useState(false)
 
@@ -169,7 +177,6 @@ const Login = () => {
     const [password, setPassword] = useState('')
     const [disabled, setDisabled] = useState(false)
 
-    const User = useContext(UserContext)
 
     const buttonDisabled = (!email || !password) || disabled
 
@@ -185,10 +192,17 @@ const Login = () => {
             })
 
             if(remember) {
-                localStorage.setItem('token', `${user.data.token}`)
+                localStorage.setItem('token', `Bearer ${user.data.token}`)
             }
-
             
+            User.setName && User.setName(user.data.user.name)
+            User.setDescription && User.setDescription(user.data.user.description)
+            User.setAvatar && User.setAvatar(user.data.user.avatar)
+            User.setIsAuth && User.setIsAuth(true)
+            User.setId && User.setId(user.data.user.id)
+            User.setEmail && User.setEmail(user.data.user.email)
+
+            push('/chat')
 
             NProgress.done()
         } catch (e) {
