@@ -17,8 +17,8 @@ export default {
             name: Yup.string().required("O nome é obrigatório!"),
             email: Yup.string().email("Formato de email inválido!")
                 .required("O email é obrigatório!"),
-            password: Yup.string().min(8, "Seu nome deve ter entre 8 e 16 caracteres!")
-                .max(16, "Seu nome deve ter entre 8 e 16 caracteres!")
+            password: Yup.string().min(8, "Sua senha deve ter entre 8 e 16 caracteres!")
+                .max(16, "Sua senha deve ter entre 8 e 16 caracteres!")
                 .required("A senha é obrigatória!")
         })
 
@@ -100,7 +100,24 @@ export default {
             },
             include: {
                 chatMessages_chatMessages_destinataryIdTouser: true,
-                chatMessages_chatMessages_userIdTouser: true
+                chatMessages_chatMessages_userIdTouser: true,
+                userToUser_userTouserToUser_userId2: {
+                    include: {
+                        user_userTouserToUser_userId: true
+                    }
+                },
+                userFriends_userTouserFriends_userId2: {
+                    include: {
+                        user_userTouserFriends_userId2: true,
+                        user_userTouserFriends_userId: true
+                    }
+                },
+                userFriends_userTouserFriends_userId: {
+                    include: {
+                        user_userTouserFriends_userId2: true,
+                        user_userTouserFriends_userId: true
+                    }
+                }
             }
         })
 

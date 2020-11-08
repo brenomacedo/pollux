@@ -1,6 +1,18 @@
 import React from 'react'
 import { createGlobalStyle } from 'styled-components'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import 'nprogress/nprogress.css'
 import Routes from './routes'
+
+toast.configure({
+    position: "top-right",
+    autoClose: 8000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true
+})
 
 const GlobalStyle = createGlobalStyle`
     :root {
@@ -32,6 +44,7 @@ function App() {
     return (
         <>
             <GlobalStyle />
+            <ToastContainer />
             <Routes />
         </>
     )

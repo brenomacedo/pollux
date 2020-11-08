@@ -1,7 +1,12 @@
-import React, { useState } from 'react'
+import React, { FormEvent, useState } from 'react'
 import styled from 'styled-components'
 import { FiEye, FiEyeOff, FiCheck } from 'react-icons/fi'
 import Star from '../images/star.svg'
+import { useHistory } from 'react-router-dom'
+import NProgress from 'nprogress'
+import api from '../api/api'
+import { AxiosError } from 'axios'
+import { toast } from 'react-toastify'
 
 interface MarkerProps {
     active: boolean
@@ -145,6 +150,45 @@ const Register = () => {
 
     const [passwordVisible, setPasswordVisible] = useState(false)
 
+    const { push } = useHistory()
+
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
+    const [disabled, setDisabled] = useState(false)
+
+    const buttonDisabled = (!name || !email || !password || !confirmPassword) || (confirmPassword !== password) || disabled
+
+    const register = async (e: FormEvent) => {
+        e.preventDefault()
+        
+        setDisabled(true)
+        NProgress.start()
+
+        try {
+            await api.post('/user', {
+                name, email, password
+            })
+
+            NProgress.done()
+            push('/register/success')
+        } catch (e) {
+            const error = e as AxiosError
+            if(!error.response) {
+                return alert('erro')
+            }
+
+            setDisabled(false)
+            NProgress.done()
+
+            error.response.data.errors.forEach((err: string) => {
+                toast.error(err)
+            })
+        }
+
+    }
+
     return (
         <Container>
             <LeftSide>
@@ -152,22 +196,29 @@ const Register = () => {
                 <p>Pollux</p>
             </LeftSide>
             <RightSide>
-                <form onSubmit={() => {}}>
+                <form onSubmit={register}>
                     <h1>Register</h1>
-                    <input placeholder="Your name" type="text"/>
-                    <input placeholder="Your email" type="email"/>
+                    <input placeholder="Your name" type="text" value={name}
+                    onChange={e => setName(e.target.value)} />
+                    <input placeholder="Your email" type="email" value={email}
+                    onChange={e => setEmail(e.target.value)}/>
                     <IPassContainer>
                         <input placeholder="Your password"
-                        type={passwordVisible ? "text" : "password"}/>
+                        type={passwordVisible ? "text" : "password"} value={password}
+                        onChange={e => setPassword(e.target.value)}/>
                         {passwordVisible ? (<Icon onClick={() => setPasswordVisible(false)}>
                             <FiEye size={20} color='black' />
                         </Icon>) : (<Icon onClick={() => setPasswordVisible(true)}>
                             <FiEyeOff size={20} color='black' />
                         </Icon>)}
                     </IPassContainer>
-                    <input placeholder="Confirm your password" type="password"/>
-                    <button type="submit">Register</button>
-                    <p>I already have an account</p>
+                    <input placeholder="Confirm your password" type="password" value={confirmPassword}
+                    onChange={e => setConfirmPassword(e.target.value)}/>
+                    <button type="submit" style={buttonDisabled ?{
+                        backgroundColor: '#ccc',
+                        cursor: 'initial'
+                    } : {}} disabled={buttonDisabled}>Register</button>
+                    <p onClick={() => push('/')}>I already have an account</p>
                 </form>
             </RightSide>
         </Container>

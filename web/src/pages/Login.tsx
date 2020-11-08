@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
+import React, { FormEvent, useState } from 'react'
 import styled from 'styled-components'
 import { FiEye, FiEyeOff, FiCheck } from 'react-icons/fi'
 import Star from '../images/star.svg'
+import NProgress from 'nprogress'
+import { toast } from 'react-toastify'
+import { useHistory } from 'react-router-dom'
 
 interface MarkerProps {
     active: boolean
@@ -146,6 +149,13 @@ const Login = () => {
     const [remember, setRemember] = useState(false)
     const [passwordVisible, setPasswordVisible] = useState(false)
 
+    const submit = (e: FormEvent) => {
+        e.preventDefault()
+        NProgress.start()
+    }
+
+    const { push } = useHistory()
+
     return (
         <Container>
             <LeftSide>
@@ -153,7 +163,7 @@ const Login = () => {
                 <p>Pollux</p>
             </LeftSide>
             <RightSide>
-                <form onSubmit={() => {}}>
+                <form onSubmit={submit}>
                     <h1>Login</h1>
                     <input placeholder="Your email" type="email"/>
                     <IPassContainer>
@@ -171,8 +181,8 @@ const Login = () => {
                         <p>Remember-me</p>
                     </LoginOptions>
                     <button type="submit">Login</button>
-                    <p>I forgot my password</p>
-                    <p>I don't have an account</p>
+                    <p onClick={() => push('/forgot-password')}>I forgot my password</p>
+                    <p onClick={() => push('/register')}>I don't have an account</p>
                 </form>
             </RightSide>
         </Container>
