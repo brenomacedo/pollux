@@ -1,6 +1,10 @@
-import React, { FC } from 'react'
+import React, { FC, useContext } from 'react'
 import styled from 'styled-components'
 import { FiPlus } from 'react-icons/fi'
+import api from '../api/api'
+import UserContext from '../contexts/UserContext'
+import { toast } from 'react-toastify'
+import { AxiosError } from 'axios'
 
 interface UserProfileProps {
     avatar: string
@@ -55,6 +59,29 @@ interface IUser {
 }
 
 const Friend: FC<IUser> = ({ name, avatar, description, id, email }) => {
+
+    const User = useContext(UserContext)
+
+    const createRequest = async () => {
+        try {
+            await api.post('/request', {
+                userId: User.id,
+                userId2: id
+            })
+
+            toast.success('Solicitação enviada!')
+        } catch(e) {
+            const errors = e as AxiosError
+            if(!errors.response) {
+                return toast.error('Ocorreu um erro ao enviar a solicitação')
+            }
+
+            errors.response.data.errors.forEach((err: string) => {
+                toast.error(err)
+            })
+        }
+    }
+
     return (
         <FriendBox>
             <UserProfile avatar={avatar} />
@@ -62,7 +89,7 @@ const Friend: FC<IUser> = ({ name, avatar, description, id, email }) => {
                 <h3>{name}</h3>
                 <p>{description}</p>
             </UserDescription>
-            <section>
+            <section onClick={createRequest}>
                 <FiPlus size={25} color='black' />
             </section>
         </FriendBox>
