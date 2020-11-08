@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react'
+import React, { FormEvent, useContext, useState } from 'react'
 import styled from 'styled-components'
 import { FiEye, FiEyeOff, FiCheck } from 'react-icons/fi'
 import Star from '../images/star.svg'
@@ -7,6 +7,7 @@ import { toast } from 'react-toastify'
 import { useHistory } from 'react-router-dom'
 import api from '../api/api'
 import { AxiosError } from 'axios'
+import UserContext from '../contexts/UserContext'
 
 interface MarkerProps {
     active: boolean
@@ -148,12 +149,27 @@ const Icon = styled.div`
 
 const Login = () => {
 
+    interface IUser {
+        id: number
+        name: string
+        description: string
+        avatar: string
+        email: string
+    }
+
+    interface IResponse {
+        user: IUser
+        token: string
+    }
+
     const [remember, setRemember] = useState(false)
     const [passwordVisible, setPasswordVisible] = useState(false)
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [disabled, setDisabled] = useState(false)
+
+    const User = useContext(UserContext)
 
     const buttonDisabled = (!email || !password) || disabled
 
@@ -164,12 +180,17 @@ const Login = () => {
         setDisabled(true)
 
         try {
-            await api.post('/user/auth', {
+            const user = await api.post<IResponse>('/user/auth', {
                 email, password
             })
 
+            if(remember) {
+                localStorage.setItem('token', `${user.data.token}`)
+            }
+
+            
+
             NProgress.done()
-            alert('LOGADO COM SUCESSO!')
         } catch (e) {
             const error = e as AxiosError
             if(!error.response) {
