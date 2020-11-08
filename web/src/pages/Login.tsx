@@ -5,6 +5,8 @@ import Star from '../images/star.svg'
 import NProgress from 'nprogress'
 import { toast } from 'react-toastify'
 import { useHistory } from 'react-router-dom'
+import api from '../api/api'
+import { AxiosError } from 'axios'
 
 interface MarkerProps {
     active: boolean
@@ -149,9 +151,38 @@ const Login = () => {
     const [remember, setRemember] = useState(false)
     const [passwordVisible, setPasswordVisible] = useState(false)
 
-    const submit = (e: FormEvent) => {
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [disabled, setDisabled] = useState(false)
+
+    const buttonDisabled = (!email || !password) || disabled
+
+    const submit = async (e: FormEvent) => {
         e.preventDefault()
+
         NProgress.start()
+        setDisabled(true)
+
+        try {
+            await api.post('/user/auth', {
+                email, password
+            })
+
+            NProgress.done()
+            alert('LOGADO COM SUCESSO!')
+        } catch (e) {
+            const error = e as AxiosError
+            if(!error.response) {
+                return toast.error('Ocorreu um erro inesperado, tente novamente mais tarde')
+            }
+
+            error.response.data.errors.forEach((error: string) => {
+                toast.error(error)
+            })
+
+            NProgress.done()
+            setDisabled(false)
+        }
     }
 
     const { push } = useHistory()
@@ -165,9 +196,11 @@ const Login = () => {
             <RightSide>
                 <form onSubmit={submit}>
                     <h1>Login</h1>
-                    <input placeholder="Your email" type="email"/>
+                    <input value={email} onChange={e => setEmail(e.target.value)}
+                    placeholder="Your email" type="email"/>
                     <IPassContainer>
-                        <input placeholder="Your password"
+                        <input value={password} onChange={e => setPassword(e.target.value)}
+                        placeholder="Your password"
                         type={passwordVisible ? "text" : "password"}/>
                         {passwordVisible ? (<Icon onClick={() => setPasswordVisible(false)}>
                             <FiEye size={20} color='black' />
@@ -180,7 +213,10 @@ const Login = () => {
                         ><FiCheck size={15} color='white' /></Marker>
                         <p>Remember-me</p>
                     </LoginOptions>
-                    <button type="submit">Login</button>
+                    <button style={buttonDisabled ?{
+                        backgroundColor: '#ccc',
+                        cursor: 'initial'
+                    } : {}} disabled={buttonDisabled} type="submit">Login</button>
                     <p onClick={() => push('/forgot-password')}>I forgot my password</p>
                     <p onClick={() => push('/register')}>I don't have an account</p>
                 </form>

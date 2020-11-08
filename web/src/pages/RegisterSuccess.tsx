@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import Lottie from 'react-lottie'
 import animationData from '../animations/star.json'
+import { useHistory } from 'react-router-dom'
 
 
 const Container = styled.div`
@@ -47,6 +48,7 @@ const Container = styled.div`
 
 const RegisterSuccess = () => {
     
+    const { push } = useHistory()
 
     return (
         <Container>
@@ -60,7 +62,7 @@ const RegisterSuccess = () => {
 
             <p>You account was created!</p>
 
-            <button>Back to login</button>
+            <button onClick={() => push('/')}>Back to login</button>
         </Container>
     )
 }

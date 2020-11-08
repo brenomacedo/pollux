@@ -176,7 +176,7 @@ const Register = () => {
         } catch (e) {
             const error = e as AxiosError
             if(!error.response) {
-                return alert('erro')
+                return toast.error('Ocorreu um erro inesperado, tente novamente mais tarde')
             }
 
             setDisabled(false)
