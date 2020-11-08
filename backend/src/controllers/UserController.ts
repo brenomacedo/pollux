@@ -85,5 +85,42 @@ export default {
 
         return res.status(200).json(UserView(user))
 
+    },
+
+    async searchFriend(req: Request, res: Response) {
+
+        const { search, id } = req.query
+
+        const schema = Yup.object().shape({
+            id: Yup.number().required('Insira o id do usuário!'),
+            name: Yup.string().required('Insira o nome do usuário que você está pesquisando!')
+        })
+        
+        try {
+            schema.validate(schema)
+        } catch(e) {
+            return res.status(500).json({ errors: e.errors })
+        }
+
+        const users = await prisma.user.findMany({
+            where: {
+                AND: [
+                    {
+                        name: {
+                            contains: String(search),
+                            mode: "insensitive"
+                        }
+                    },
+                    {
+                        id: {
+                            not: Number(id)
+                        }
+                    }
+                ]
+            }
+        })
+
+        return res.status(200).json(users)
+
     }
 }

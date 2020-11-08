@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { FaUserFriends, FaDoorOpen } from 'react-icons/fa'
 import SearchFriends from '../components/SearchFriends'
 import Chats from '../components/Chats'
 import Notifications from '../components/Notifications'
 import ChatBoxComponent from '../components/ChatBoxComponent'
+import UserContext from '../contexts/UserContext'
 
 const Container = styled.div`
     min-height: 480px;
@@ -61,22 +62,42 @@ const UserProfile = styled.div`
     height: 40px;
     border-radius: 20px;
     background-color: white;
+    background-image: url('${'http://localhost:3333/files/default-avatar.png'}');
+    background-position: center;
+    background-size: contain;
     border: 1px solid #ccc;
 `
 
 const Chat = () => {
+
+    const User = useContext(UserContext)
+
+    const [] = useState()
+
+    useEffect(() => {
+
+    }, [])
+
+    useEffect(() => {
+
+    }, [])
+
+    useEffect(() => {
+
+    }, [])
+
     return (
         <Container>
             <Friends>
                 <UserBar>
                     <UserProfile />
-                    <p>Breno Macêdo</p>
+                    <p>{User.name}</p>
                     <aside>
                         <FaUserFriends size={20} color='#01004d' />
                         <FaDoorOpen size={20} color='#01004d' />
                     </aside>
                 </UserBar>
-                <Notifications />
+                <Chats />
             </Friends>
             <ChatBox>
                 <ChatBoxComponent />
