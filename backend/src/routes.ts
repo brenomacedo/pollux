@@ -14,6 +14,7 @@ routes.get('/user/search', UserController.searchFriend)
 routes.post('/message', MessageController.createMessage)
 routes.post('/request', FriendRequestController.createRequest)
 routes.get('/request/:id', FriendRequestController.getRequests)
+routes.delete('/request/:from/:to', FriendRequestController.deleteRequest)
 routes.post('/friend', FriendRequestController.answerRequest)
 routes.get('/friend/:id', FriendController.getFriends)
 

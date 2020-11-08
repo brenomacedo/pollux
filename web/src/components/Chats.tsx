@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FC } from 'react'
 import styled from 'styled-components'
 import { FiSearch } from 'react-icons/fi'
 import Friend from './Friend'
@@ -47,7 +47,32 @@ const FriendsList = styled.div`
     overflow: auto;
 `
 
-const SearchFriends = () => {
+interface IUser {
+    id: number
+    name: string
+    avatar: string
+    email: string
+    description: string
+}
+
+interface IFriend {
+    friend: IUser
+}
+
+interface IChats {
+    friends: IFriend[] | undefined
+}
+
+const Chats: FC<IChats> = ({ friends }) => {
+
+    const renderFriends = () => {
+        return friends?.map(friend => {
+            return (
+                <ChatFriend friend={friend.friend} />
+            )
+        })
+    }
+
     return (
         <Container>
             <SearchBar>
@@ -55,10 +80,10 @@ const SearchFriends = () => {
                 <button><FiSearch size={12} color='white' /></button>
             </SearchBar>
             <FriendsList>
-                <ChatFriend />
+                {renderFriends()}
             </FriendsList>
         </Container>
     )
 }
 
-export default SearchFriends
+export default Chats

@@ -120,10 +120,6 @@ const Chat = () => {
         })()
     }, [])
 
-    useEffect(() => {
-
-    }, [])
-
     const { push } = useHistory()
 
     const logout = () => {
@@ -143,10 +139,11 @@ const Chat = () => {
 
     const renderBar = () => {
         if(bar === 'chats')
-            return <Chats />
+            return <Chats friends={friends} />
 
         if(bar === 'notifications')
-            return <Notifications />
+            return <Notifications notifications={notifications}
+            setNotifications={setNotifications} />
 
         if(bar === 'search')
             return <SearchFriends />

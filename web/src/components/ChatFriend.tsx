@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FC } from 'react'
 import styled from 'styled-components'
 import { FiPlus } from 'react-icons/fi'
 
@@ -39,13 +39,25 @@ const UserDescription = styled.div`
     }
 `
 
-const ChatFriend = () => {
+interface IUser {
+    id: number
+    name: string
+    avatar: string
+    email: string
+    description: string
+}
+
+interface ChatFriendProps {
+    friend: IUser
+}
+
+const ChatFriend: FC<ChatFriendProps> = ({ friend }) => {
     return (
         <FriendBox>
             <UserProfile />
             <UserDescription>
-                <h3>Breno Macêdo</h3>
-                <p>Descrição do meu perfil</p>
+                <h3>{friend.name}</h3>
+                <p>{friend.description}</p>
             </UserDescription>
         </FriendBox>
     )

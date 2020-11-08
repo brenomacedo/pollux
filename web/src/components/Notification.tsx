@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Dispatch, FC, SetStateAction } from 'react'
 import styled from 'styled-components'
 import { FiCheckCircle, FiXCircle } from 'react-icons/fi'
 
@@ -45,13 +45,35 @@ const UserDescription = styled.div`
     }
 `
 
-const Notification = () => {
+interface INotificationRaw {
+    status: string
+    from: {
+        id: number
+        name: string
+        avatar: string
+        description: string | null
+    }
+}
+
+
+interface INotification {
+    status: string
+    from: {
+        id: number
+        name: string
+        avatar: string
+        description: string | null
+    }
+    setNotifications: Dispatch<SetStateAction<INotificationRaw[] | undefined>>
+}
+
+const Notification: FC<INotification> = ({ from, status }) => {
     return (
         <FriendBox>
             <UserProfile />
             <UserDescription>
-                <h3>Breno Macêdo</h3>
-                <p>Descrição do meu perfil</p>
+                <h3>{from.name}</h3>
+                <p>{from.description}</p>
             </UserDescription>
             <section>
                 <aside>

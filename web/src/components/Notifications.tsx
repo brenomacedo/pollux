@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Dispatch, FC, SetStateAction } from 'react'
 import styled from 'styled-components'
 import { FiSearch } from 'react-icons/fi'
 import Friend from './Friend'
@@ -28,14 +28,36 @@ const FriendsList = styled.div`
     overflow: auto;
 `
 
-const Notifications = () => {
+interface INotification {
+    status: string
+    from: {
+        id: number
+        name: string
+        avatar: string
+        description: string | null
+    }
+}
+
+interface NotificationsProps {
+    notifications: INotification[] | undefined
+    setNotifications: Dispatch<SetStateAction<INotification[] | undefined>>
+}
+
+const Notifications: FC<NotificationsProps> = ({ notifications, setNotifications }) => {
+
+    const renderNotifications = () => {
+        return notifications?.map(notification => {
+            return <Notification setNotifications={setNotifications} {...notification} />
+        })
+    }
+
     return (
         <Container>
             <SearchBar>
                 <h3>Friend requests:</h3>
             </SearchBar>
             <FriendsList>
-                <Notification />
+                {renderNotifications()}
             </FriendsList>
         </Container>
     )

@@ -149,5 +149,41 @@ export default {
 
         return res.status(200).json(RequestViews(requests))
 
+    },
+
+    async deleteRequest(req: Request, res: Response) {
+
+        const { from, to } = req.params
+
+        const data = { from, to }
+
+        const schema = Yup.object().shape({
+            from: Yup.number().required('Insira o id do remetente'),
+            to: Yup.number().required('Insira o id do destinatário!')
+        })
+
+        try {
+            await schema.validate(data, {
+                abortEarly: false
+            })
+        } catch(e) {
+            return res.status(500).json({ errors: e.errors })
+        }
+
+        try {
+            await prisma.userToUser.delete({
+                where: {
+                    userToUserIndex: {
+                        userId: Number(from),
+                        userId2: Number(to)
+                    }
+                }
+            })
+
+            return res.status(200).json({ message: 'Deletado com sucesso!' })
+        } catch(e) {
+            return res.status(500).json({ errors: ['Essa solicitação não existe!'] })
+        }
+
     }
 }
