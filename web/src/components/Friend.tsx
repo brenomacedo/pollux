@@ -54,11 +54,10 @@ interface IUser {
     id: number
     name: string
     avatar: string
-    email: string
     description: string
 }
 
-const Friend: FC<IUser> = ({ name, avatar, description, id, email }) => {
+const Friend: FC<IUser> = ({ name, avatar, description, id }) => {
 
     const User = useContext(UserContext)
 

@@ -1,6 +1,10 @@
-import React, { FC } from 'react'
+import React, { Dispatch, FC, SetStateAction } from 'react'
 import styled from 'styled-components'
 import { FiPlus } from 'react-icons/fi'
+
+interface UserProfileProps {
+    avatar: string
+}
 
 const FriendBox = styled.div`
     width: 100%;
@@ -9,6 +13,11 @@ const FriendBox = styled.div`
     display: flex;
     align-items: center;
     border-bottom: 1px solid #ccc;
+    cursor: pointer;
+
+    :hover {
+        background-color: #cdcdcd;
+    }
 
     section {
         margin-left: 110px;
@@ -16,12 +25,15 @@ const FriendBox = styled.div`
     }
 `
 
-const UserProfile = styled.div`
+const UserProfile = styled.div<UserProfileProps>`
     width: 40px;
     height: 40px;
     border-radius: 25px;
     background-color: white;
     border: 1px solid #ccc;
+    background-image: url('http://localhost:3333/files/${props => props.avatar}');
+    background-position: center;
+    background-size: contain;
 `
 
 const UserDescription = styled.div`
@@ -43,18 +55,28 @@ interface IUser {
     id: number
     name: string
     avatar: string
-    email: string
     description: string
 }
 
 interface ChatFriendProps {
     friend: IUser
+    setSelectedChat: Dispatch<SetStateAction<IUser | undefined>>
 }
 
-const ChatFriend: FC<ChatFriendProps> = ({ friend }) => {
+const ChatFriend: FC<ChatFriendProps> = ({ friend, setSelectedChat }) => {
+
+    const changeSelectedChat = () => {
+        setSelectedChat({
+            id: friend.id,
+            avatar: friend.avatar,
+            description: friend.description,
+            name: friend.name
+        })
+    }
+
     return (
-        <FriendBox>
-            <UserProfile />
+        <FriendBox onClick={changeSelectedChat}>
+            <UserProfile avatar={friend.avatar} />
             <UserDescription>
                 <h3>{friend.name}</h3>
                 <p>{friend.description}</p>

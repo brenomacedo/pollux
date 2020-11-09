@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FC } from 'react'
 import styled from 'styled-components'
 import { FiArrowRight } from 'react-icons/fi'
 
@@ -6,9 +6,16 @@ interface MessageProps {
     sent?: boolean
 }
 
+interface UserProfileProps {
+    avatar: string
+}
+
 const Container = styled.div`
+    
     min-height: 480px;
     height: 100vh;
+    display: flex;
+    flex-direction: column;
 `
 
 const ChatBar = styled.div`
@@ -24,12 +31,15 @@ const ChatBar = styled.div`
     }
 `
 
-const ChatProfile = styled.div`
+const ChatProfile = styled.div<UserProfileProps>`
     width: 40px;
     height: 40px;
     border-radius: 20px;
     border: 1px solid #ccc;
     background-color: white;
+    background-image: url('http://localhost:3333/files/${props => props.avatar}');
+    background-position: center;
+    background-size: contain;
 `
 
 const ChatMessage = styled.div`
@@ -77,12 +87,43 @@ const Message = styled.div<MessageProps>`
     margin-bottom: 10px;
 `
 
-const ChatBoxComponent = () => {
+const NoChat = styled.div`
+    align-self: center;
+    margin-top: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    img {
+        width: 100px
+    }
+
+    h2 {
+        margin-top: 25px;
+        font-family: var(--RW);
+        width: 350px;
+        text-align: center;
+    }
+`
+
+interface IUser {
+    id: number
+    name: string
+    avatar: string
+    description: string
+}
+
+interface ChatBoxComponent {
+    user: IUser | undefined
+}
+
+const ChatBoxComponent: FC<ChatBoxComponent> = ({ user }) => {
     return (
         <Container>
-            <ChatBar>
-                <ChatProfile />
-                <h3>Breno Macêdo</h3>
+            {user ? (<><ChatBar>
+                <ChatProfile avatar={user.avatar} />
+                <h3>{user.name}</h3>
             </ChatBar>
             <ChatBox>
                 <Message >
@@ -100,7 +141,13 @@ const ChatBoxComponent = () => {
                 <button>
                     <FiArrowRight size={12} color='white' />
                 </button>
-            </ChatMessage>
+            </ChatMessage></>) : (
+                <NoChat>
+                    <img src="http://localhost:3333/files/default-avatar.png" alt="logo"/>
+                    <h2>Nenhuma conversa selecionada</h2>
+                </NoChat>
+            )}
+            
         </Container>
     )
 }

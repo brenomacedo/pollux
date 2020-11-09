@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { Dispatch, FC, SetStateAction } from 'react'
 import styled from 'styled-components'
 import { FiSearch } from 'react-icons/fi'
 import Friend from './Friend'
@@ -51,7 +51,6 @@ interface IUser {
     id: number
     name: string
     avatar: string
-    email: string
     description: string
 }
 
@@ -61,14 +60,15 @@ interface IFriend {
 
 interface IChats {
     friends: IFriend[] | undefined
+    setSelectedChat: Dispatch<SetStateAction<IUser | undefined>>
 }
 
-const Chats: FC<IChats> = ({ friends }) => {
+const Chats: FC<IChats> = ({ friends, setSelectedChat }) => {
 
     const renderFriends = () => {
         return friends?.map(friend => {
             return (
-                <ChatFriend friend={friend.friend} />
+                <ChatFriend setSelectedChat={setSelectedChat} friend={friend.friend} />
             )
         })
     }

@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client'
 import * as Yup from 'yup'
 import { RequestView, RequestViews } from '../views/RequestView'
 import { UserFriendView } from '../views/UserFriendView'
+import { verify } from 'jsonwebtoken'
 
 const prisma = new PrismaClient()
 
@@ -23,6 +24,27 @@ export default {
             })
         } catch (e) {
             return res.status(500).json({ errors: e.errors })
+        }
+
+        const verifyFriendly = await prisma.userToUser.findMany({
+            where: {
+                OR: [
+                    {
+                        userId: userId,
+                        userId2: userId2,
+                        status: "ACCEPTED"
+                    },
+                    {
+                        userId: userId2,
+                        userId2: userId,
+                        status: "ACCEPTED"
+                    }
+                ]
+            }
+        })
+
+        if(verifyFriendly.length !== 0) {
+            return res.status(500).json({ errors: ['Vocês já são amigos!'] })
         }
 
         try {

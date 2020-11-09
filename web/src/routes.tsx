@@ -36,7 +36,7 @@ const Routes = () => {
                 User.setAvatar && User.setAvatar(res.data.avatar)
                 User.setIsAuth && User.setIsAuth(true)
             }).catch(err => {
-                alert('erro')
+                
             })
         } else {
         }

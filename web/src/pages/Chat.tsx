@@ -95,7 +95,6 @@ const Chat = () => {
         id: number
         name: string
         avatar: string
-        email: string
         description: string
     }
 
@@ -103,7 +102,7 @@ const Chat = () => {
 
     const [bar, setBar] = useState<'notifications' | 'chats' | 'search'>('chats')
     const [notifications, setNotifications] = useState<INotification[]>()
-    const [search, setSearch] = useState<IUser[]>([])
+    const [selectedChat, setSelectedChat] = useState<IUser>()
     const [friends, setFriends] = useState<IFriend[]>()
 
     useEffect(() => {
@@ -139,7 +138,7 @@ const Chat = () => {
 
     const renderBar = () => {
         if(bar === 'chats')
-            return <Chats friends={friends} />
+            return <Chats setSelectedChat={setSelectedChat} friends={friends} />
 
         if(bar === 'notifications')
             return <Notifications notifications={notifications}
@@ -157,18 +156,18 @@ const Chat = () => {
                     <p>{User.name}</p>
                     <aside>
                         <FaUserFriends onClick={() => toggleBar('chats')}
-                        size={20} color='#01004d' />
+                        size={20} color={bar === 'chats' ? '#fff' : '#01004d'} />
                         <FaBell onClick={() => toggleBar('notifications')}
-                        size={20} color='#01004d' />
+                        size={20} color={bar === 'notifications' ? '#fff' : '#01004d'} />
                         <FaSearch onClick={() => toggleBar('search')}
-                        size={20} color='#01004d' />
+                        size={20} color={bar === 'search' ? '#fff' : '#01004d'} />
                         <FaDoorOpen onClick={logout} size={20} color='#01004d' />
                     </aside>
                 </UserBar>
                 {renderBar()}
             </Friends>
             <ChatBox>
-                <ChatBoxComponent />
+                <ChatBoxComponent user={selectedChat} />
             </ChatBox>
         </Container>
     )
