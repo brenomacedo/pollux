@@ -38,16 +38,30 @@ interface INotification {
     }
 }
 
+interface IUser {
+    id: number
+    name: string
+    avatar: string
+    description: string
+}
+
+interface IFriend {
+    friend: IUser
+}
+
 interface NotificationsProps {
     notifications: INotification[] | undefined
     setNotifications: Dispatch<SetStateAction<INotification[] | undefined>>
+    setFriends: Dispatch<SetStateAction<IFriend[] | undefined>>
+    friends: IFriend[] | undefined
 }
 
-const Notifications: FC<NotificationsProps> = ({ notifications, setNotifications }) => {
+const Notifications: FC<NotificationsProps> = ({ notifications, setNotifications, setFriends, friends }) => {
 
     const renderNotifications = () => {
         return notifications?.map(notification => {
-            return <Notification notifications={notifications} setNotifications={setNotifications} {...notification} />
+            return <Notification notifications={notifications} setFriends={setFriends}
+            setNotifications={setNotifications} {...notification} friends={friends} />
         })
     }
 

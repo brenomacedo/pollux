@@ -171,7 +171,10 @@ const ChatBoxComponent: FC<ChatBoxComponent> = ({ user, messages, setMessages, s
     }
 
     const renderMessages = () => {
-        return messages.map(message => {
+        const userMessages = messages.filter(message => {
+            return message.userId === user?.id || message.destinataryId === user?.id
+        })
+        return userMessages.map(message => {
             return (
                 <Message key={message.id} sent={message.userId === User.id}>
                     {message.content}

@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { FC, useContext, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { FiSearch } from 'react-icons/fi'
 import Friend from './Friend'
@@ -48,7 +48,11 @@ const FriendsList = styled.div`
     overflow: auto;
 `
 
-const SearchFriends = () => {
+interface ISearch {
+    socket: SocketIOClient.Socket
+}
+
+const SearchFriends: FC<ISearch> = ({ socket }) => {
 
     interface IUser {
         id: number
@@ -70,7 +74,7 @@ const SearchFriends = () => {
 
     const renderFriends = () => {
         return search.map(user => {
-            return <Friend key={user.id} {...user} />
+            return <Friend socket={socket} key={user.id} {...user} />
         })
     }
 

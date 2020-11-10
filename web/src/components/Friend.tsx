@@ -55,18 +55,21 @@ interface IUser {
     name: string
     avatar: string
     description: string
+    socket: SocketIOClient.Socket
 }
 
-const Friend: FC<IUser> = ({ name, avatar, description, id }) => {
+const Friend: FC<IUser> = ({ name, avatar, description, id , socket }) => {
 
     const User = useContext(UserContext)
 
     const createRequest = async () => {
         try {
-            await api.post('/request', {
+            const request = await api.post('/request', {
                 userId: User.id,
                 userId2: id
             })
+
+            socket.emit('friendRequest', { request: request.data, destId: id })
 
             toast.success('Solicitação enviada!')
         } catch(e) {

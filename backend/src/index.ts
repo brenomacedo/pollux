@@ -19,6 +19,16 @@ interface INewMessage {
     destinataryId: number
 }
 
+interface IFriendRequest {
+    status: string
+    from: {
+        id: number
+        name: string
+        avatar: string
+        description: string | null
+    }
+}
+
 const server = express()
 const app = http.createServer(server)
 
@@ -60,6 +70,21 @@ io.on("connection", socket => {
         const clientSocketId = clients[clientIndex].socketId
 
         io.to(clientSocketId).emit('newMessage', newMessage)
+    })
+
+    socket.on('friendRequest', (friendRequest: { request: IFriendRequest, destId: number }) => {
+        const clientsIds = clients.map(client => {
+            return client.id
+        })
+
+        if(!clientsIds.includes(friendRequest.destId)) {
+            return console.log('usuário offline')
+        }
+
+        const clientIndex = clientsIds.indexOf(friendRequest.destId)
+        const clientSocketId = clients[clientIndex].socketId
+
+        io.to(clientSocketId).emit('friendRequest', friendRequest.request)
     })
 
     socket.on("disconnect", () => {

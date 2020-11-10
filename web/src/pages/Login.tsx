@@ -208,6 +208,8 @@ const Login = () => {
         } catch (e) {
             const error = e as AxiosError
             if(!error.response) {
+                NProgress.done()
+                setDisabled(false)
                 return toast.error('Ocorreu um erro inesperado, tente novamente mais tarde')
             }
 

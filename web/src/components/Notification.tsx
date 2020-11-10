@@ -49,6 +49,17 @@ const UserDescription = styled.div`
     }
 `
 
+interface IUser {
+    id: number
+    name: string
+    avatar: string
+    description: string
+}
+
+interface IFriend {
+    friend: IUser
+}
+
 interface INotificationRaw {
     status: string
     from: {
@@ -69,10 +80,13 @@ interface INotification {
         description: string | null
     }
     setNotifications: Dispatch<SetStateAction<INotificationRaw[] | undefined>>
+    setFriends: Dispatch<SetStateAction<IFriend[] | undefined>>
     notifications: INotificationRaw[]
+    friends: IFriend[] | undefined
 }
 
-const Notification: FC<INotification> = ({ from, status, setNotifications, notifications }) => {
+
+const Notification: FC<INotification> = ({ from, setNotifications, notifications, setFriends, friends }) => {
 
     const User = useContext(UserContext)
 
@@ -84,9 +98,17 @@ const Notification: FC<INotification> = ({ from, status, setNotifications, notif
             })
 
             toast.success('Solicitação aceita!')
-
-            const newNotifications = notifications.filter(not => not.from !== from)
+            
+            const newNotifications = notifications.filter(not => not.from.id !== from.id)
             setNotifications(newNotifications)
+            friends && setFriends([...friends, {
+                friend:{
+                    avatar: from.avatar,
+                    description: from.description ? from.description : '',
+                    id: from.id,
+                    name: from.name
+                }
+            }])
         } catch(e) {
             const errors = e as AxiosError
             if(!errors.response) {
