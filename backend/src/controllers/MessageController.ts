@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { Request, Response } from 'express'
-import { MessageView } from '../views/MessageView'
+import { MessagesView, MessageView } from '../views/MessageView'
 import * as Yup from 'yup'
 
 const prisma = new PrismaClient()
@@ -46,6 +46,24 @@ export default {
         } catch (e) {
             return res.status(500).json({ errors: ['Não foi possível enviar sua mensagem'] })
         }
+
+    },
+
+    async getMessages(req: Request, res: Response) {
+
+        const { id } = req.params
+
+        const messages = await prisma.chatMessages.findMany({
+            where: {
+                OR: [{
+                    userId: Number(id)
+                }, {
+                    destinataryId: Number(id)
+                }]
+            }
+        })
+
+        return res.status(200).json(MessagesView(messages))
 
     }
 }

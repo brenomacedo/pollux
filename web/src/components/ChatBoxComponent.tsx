@@ -1,6 +1,9 @@
-import React, { FC } from 'react'
+import React, { Dispatch, FC, SetStateAction, useContext, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { FiArrowRight } from 'react-icons/fi'
+import api from '../api/api'
+import UserContext from '../contexts/UserContext'
+import { toast } from 'react-toastify'
 
 interface MessageProps {
     sent?: boolean
@@ -114,11 +117,65 @@ interface IUser {
     description: string
 }
 
-interface ChatBoxComponent {
-    user: IUser | undefined
+interface IMessage {
+    id: number
+    content: string
+    type: string
+    createdAt: number
+    userId: number
+    destinataryId: number
 }
 
-const ChatBoxComponent: FC<ChatBoxComponent> = ({ user }) => {
+interface ChatBoxComponent {
+    user: IUser | undefined
+    messages: IMessage[]
+    setMessages: Dispatch<SetStateAction<IMessage[]>>
+}
+
+
+
+const ChatBoxComponent: FC<ChatBoxComponent> = ({ user, messages, setMessages }) => {
+
+    const inputRef = useRef<HTMLInputElement>(null)
+
+    const User = useContext(UserContext)
+
+    const sendMessage = async () => {
+
+        if(!inputRef.current?.value) {
+            return
+        }
+
+        if(!user) {
+            return
+        }
+
+        try {
+            const newMessage = await api.post('/message', {
+                type: "MESSAGE",
+                content: inputRef.current.value,
+                userId: User.id,
+                destinataryId: user.id
+            })
+
+            setMessages([...messages, newMessage.data])
+
+            inputRef.current.value = ''
+        } catch(e) {
+            toast.error('Ocorreu um erro ao enviar sua mensagem!')
+        }
+    }
+
+    const renderMessages = () => {
+        return messages.map(message => {
+            return (
+                <Message key={message.id} sent={message.userId === User.id}>
+                    {message.content}
+                </Message>
+            )
+        })
+    }
+
     return (
         <Container>
             {user ? (<><ChatBar>
@@ -126,19 +183,11 @@ const ChatBoxComponent: FC<ChatBoxComponent> = ({ user }) => {
                 <h3>{user.name}</h3>
             </ChatBar>
             <ChatBox>
-                <Message >
-                    asdasd
-                </Message>
-                <Message sent >
-                    asdasd
-                </Message>
-                <Message >
-                    asdasd
-                </Message>
+                {renderMessages()}
             </ChatBox>
             <ChatMessage>
-                <input type="text" placeholder="Write an message"/>
-                <button>
+                <input ref={inputRef} type="text" placeholder="Write an message"/>
+                <button onClick={sendMessage}>
                     <FiArrowRight size={12} color='white' />
                 </button>
             </ChatMessage></>) : (

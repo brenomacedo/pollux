@@ -98,12 +98,22 @@ const Chat = () => {
         description: string
     }
 
+    interface IMessage {
+        id: number
+        content: string
+        type: string
+        createdAt: number
+        userId: number
+        destinataryId: number
+    }
+
     const User = useContext(UserContext)
 
     const [bar, setBar] = useState<'notifications' | 'chats' | 'search'>('chats')
     const [notifications, setNotifications] = useState<INotification[]>()
     const [selectedChat, setSelectedChat] = useState<IUser>()
     const [friends, setFriends] = useState<IFriend[]>()
+    const [messages, setMessages] = useState<IMessage[]>([])
 
     useEffect(() => {
         (async () => {
@@ -116,6 +126,14 @@ const Chat = () => {
         (async () => {
             const friends = await api.get(`/friend/${User.id}`)
             setFriends(friends.data)
+        })()
+    }, [])
+
+    useEffect(() => {
+        (async () => {
+            const messages = await api.get(`/message/${User.id}`)
+            setMessages(messages.data)
+            console.log(messages.data)
         })()
     }, [])
 
@@ -167,7 +185,7 @@ const Chat = () => {
                 {renderBar()}
             </Friends>
             <ChatBox>
-                <ChatBoxComponent user={selectedChat} />
+                <ChatBoxComponent setMessages={setMessages} messages={messages} user={selectedChat} />
             </ChatBox>
         </Container>
     )
