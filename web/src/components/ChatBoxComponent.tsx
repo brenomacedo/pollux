@@ -4,6 +4,7 @@ import { FiArrowRight } from 'react-icons/fi'
 import api from '../api/api'
 import UserContext from '../contexts/UserContext'
 import { toast } from 'react-toastify'
+import { DateTime } from 'luxon'
 
 interface MessageProps {
     sent?: boolean
@@ -89,6 +90,10 @@ const Message = styled.div<MessageProps>`
     border-radius: 5px;
     font-family: var(--RW);
     margin-bottom: 10px;
+
+    p {
+        font-size: 10px;
+    }
 `
 
 const NoChat = styled.div`
@@ -175,9 +180,21 @@ const ChatBoxComponent: FC<ChatBoxComponent> = ({ user, messages, setMessages, s
             return message.userId === user?.id || message.destinataryId === user?.id
         })
         return userMessages.map(message => {
+
+            const date = DateTime.fromMillis(message.createdAt).setZone('America/Sao_Paulo')
+            .setLocale('pt-BR').toLocaleString({
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            })
+
             return (
                 <Message key={message.id} sent={message.userId === User.id}>
-                    {message.content}
+                    <div>{message.content}</div>
+                <p>{date.toString()}</p>
                 </Message>
             )
         })
