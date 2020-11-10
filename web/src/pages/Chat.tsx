@@ -74,6 +74,16 @@ const UserProfile = styled.div`
     border: 1px solid #ccc;
 `
 
+const NotificationCirle = styled.div`
+    width: 6px;
+    height: 6px;
+    border-radius: 3px;
+    background-color: yellow;
+    position: absolute;
+    left: 40px;
+    top: 2px;
+`
+
 const socket = io('http://localhost:3333', {
     autoConnect: false
 })
@@ -207,8 +217,11 @@ const Chat = () => {
                     <aside>
                         <FaUserFriends onClick={() => toggleBar('chats')}
                         size={20} color={bar === 'chats' ? '#fff' : '#01004d'} />
-                        <FaBell onClick={() => toggleBar('notifications')}
-                        size={20} color={bar === 'notifications' ? '#fff' : '#01004d'} />
+                        <>
+                            <FaBell onClick={() => toggleBar('notifications')}
+                            size={20} color={bar === 'notifications' ? '#fff' : '#01004d'} />
+                            {notifications?.length !== 0 && <NotificationCirle />}
+                        </>
                         <FaSearch onClick={() => toggleBar('search')}
                         size={20} color={bar === 'search' ? '#fff' : '#01004d'} />
                         <FaDoorOpen onClick={logout} size={20} color='#01004d' />
