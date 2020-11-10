@@ -141,6 +141,14 @@ const Chat = () => {
     }, [notifications])
 
     useEffect(() => {
+        socket.off('acceptedRequest').on('acceptedRequest', (user: IUser) => {
+            alert('new freidn')
+            console.log(friends)
+            friends && setFriends([...friends, { friend: user }])
+        })
+    }, [friends])
+
+    useEffect(() => {
         (async () => {
             const notifications = await api.get(`/request/${User.id}`)
             setNotifications(notifications.data)
@@ -184,7 +192,7 @@ const Chat = () => {
 
         if(bar === 'notifications')
             return <Notifications notifications={notifications} friends={friends}
-            setNotifications={setNotifications} setFriends={setFriends} />
+            setNotifications={setNotifications} setFriends={setFriends} socket={socket} />
 
         if(bar === 'search')
             return <SearchFriends socket={socket} />

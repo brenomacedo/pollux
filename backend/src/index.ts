@@ -29,6 +29,13 @@ interface IFriendRequest {
     }
 }
 
+interface IUser {
+    id: number
+    name: string
+    description: string | null
+    avatar: string
+}
+
 const server = express()
 const app = http.createServer(server)
 
@@ -85,6 +92,21 @@ io.on("connection", socket => {
         const clientSocketId = clients[clientIndex].socketId
 
         io.to(clientSocketId).emit('friendRequest', friendRequest.request)
+    })
+
+    socket.on('acceptedRequest', (req: { user: IUser, destId: number }) => {
+        const clientsIds = clients.map(client => {
+            return client.id
+        })
+
+        if(!clientsIds.includes(req.destId)) {
+            return console.log('usuário offline')
+        }
+
+        const clientIndex = clientsIds.indexOf(req.destId)
+        const clientSocketId = clients[clientIndex].socketId
+
+        io.to(clientSocketId).emit('acceptedRequest', req.user)
     })
 
     socket.on("disconnect", () => {

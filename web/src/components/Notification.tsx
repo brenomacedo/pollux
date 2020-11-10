@@ -83,10 +83,11 @@ interface INotification {
     setFriends: Dispatch<SetStateAction<IFriend[] | undefined>>
     notifications: INotificationRaw[]
     friends: IFriend[] | undefined
+    socket: SocketIOClient.Socket
 }
 
 
-const Notification: FC<INotification> = ({ from, setNotifications, notifications, setFriends, friends }) => {
+const Notification: FC<INotification> = ({ from, setNotifications, notifications, setFriends, friends, socket }) => {
 
     const User = useContext(UserContext)
 
@@ -109,6 +110,15 @@ const Notification: FC<INotification> = ({ from, setNotifications, notifications
                     name: from.name
                 }
             }])
+
+            socket.emit('acceptedRequest', { user: {
+                id: User.id,
+                name: User.name,
+                avatar: User.avatar,
+                description: User.description
+            }, destId: from.id })
+
+            
         } catch(e) {
             const errors = e as AxiosError
             if(!errors.response) {

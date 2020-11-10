@@ -54,14 +54,15 @@ interface NotificationsProps {
     setNotifications: Dispatch<SetStateAction<INotification[] | undefined>>
     setFriends: Dispatch<SetStateAction<IFriend[] | undefined>>
     friends: IFriend[] | undefined
+    socket: SocketIOClient.Socket
 }
 
-const Notifications: FC<NotificationsProps> = ({ notifications, setNotifications, setFriends, friends }) => {
+const Notifications: FC<NotificationsProps> = ({ notifications, setNotifications, setFriends, friends, socket }) => {
 
     const renderNotifications = () => {
         return notifications?.map(notification => {
             return <Notification notifications={notifications} setFriends={setFriends}
-            setNotifications={setNotifications} {...notification} friends={friends} />
+            setNotifications={setNotifications} {...notification} friends={friends} socket={socket} />
         })
     }
 
