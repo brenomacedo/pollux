@@ -77,6 +77,7 @@ const ChatMessage = styled.div`
 const ChatBox = styled.div`
     height: calc(100vh - 110px);
     padding: 20px;
+    overflow: auto;
 `
 
 const Message = styled.div<MessageProps>`
@@ -130,11 +131,12 @@ interface ChatBoxComponent {
     user: IUser | undefined
     messages: IMessage[]
     setMessages: Dispatch<SetStateAction<IMessage[]>>
+    socket: SocketIOClient.Socket
 }
 
 
 
-const ChatBoxComponent: FC<ChatBoxComponent> = ({ user, messages, setMessages }) => {
+const ChatBoxComponent: FC<ChatBoxComponent> = ({ user, messages, setMessages, socket }) => {
 
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -161,6 +163,8 @@ const ChatBoxComponent: FC<ChatBoxComponent> = ({ user, messages, setMessages })
             setMessages([...messages, newMessage.data])
 
             inputRef.current.value = ''
+            
+            socket.emit('newMessage', newMessage.data)
         } catch(e) {
             toast.error('Ocorreu um erro ao enviar sua mensagem!')
         }

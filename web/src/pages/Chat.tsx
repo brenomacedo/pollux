@@ -7,9 +7,8 @@ import Notifications from '../components/Notifications'
 import ChatBoxComponent from '../components/ChatBoxComponent'
 import UserContext from '../contexts/UserContext'
 import { useHistory } from 'react-router-dom'
-import { render } from 'nprogress'
-import Axios from 'axios'
 import api from '../api/api'
+import io from 'socket.io-client'
 
 const Container = styled.div`
     min-height: 480px;
@@ -75,6 +74,10 @@ const UserProfile = styled.div`
     border: 1px solid #ccc;
 `
 
+const socket = io('http://localhost:3333', {
+    autoConnect: false
+})
+
 const Chat = () => {
 
     interface INotification {
@@ -116,6 +119,21 @@ const Chat = () => {
     const [messages, setMessages] = useState<IMessage[]>([])
 
     useEffect(() => {
+        if(!socket.connected) {
+            socket.connect()
+            socket.emit('newConnection', User.id)
+        }
+    }, [])
+
+    useEffect(() => {
+        socket.off('newMessage').on('newMessage', (newMessage: IMessage) => {
+            setMessages([...messages, newMessage])
+            console.log([...messages, newMessage])
+            console.log(messages)
+        })
+    }, [messages])
+
+    useEffect(() => {
         (async () => {
             const notifications = await api.get(`/request/${User.id}`)
             setNotifications(notifications.data)
@@ -133,7 +151,6 @@ const Chat = () => {
         (async () => {
             const messages = await api.get(`/message/${User.id}`)
             setMessages(messages.data)
-            console.log(messages.data)
         })()
     }, [])
 
@@ -185,7 +202,7 @@ const Chat = () => {
                 {renderBar()}
             </Friends>
             <ChatBox>
-                <ChatBoxComponent setMessages={setMessages} messages={messages} user={selectedChat} />
+                <ChatBoxComponent socket={socket} setMessages={setMessages} messages={messages} user={selectedChat} />
             </ChatBox>
         </Container>
     )
